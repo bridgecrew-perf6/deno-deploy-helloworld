@@ -1,27 +1,19 @@
 /** @jsx h */
-import { serve } from "https://deno.land/std@0.142.0/http/server.ts";
-import { h, html } from "https://deno.land/x/htm@0.0.2/mod.tsx";
+import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
+import { h } from "https://esm.sh/preact@10.5.15";
+import { renderToString } from "https://esm.sh/preact-render-to-string@5.1.19?deps=preact@10.5.15";
 
-const handler = (req: Request) => html({
-  title: "Hello World!",
-  body: (
-    <div
-      class="flex flex-col items-center justify-center w-full h-screen"
-      style="background-image:url('https://dash.deno.com/assets/background-pattern.svg')"
-    >
-      <h1 class="text-4xl font-bold">Hello World!</h1>
-      <p class="mt-2 text-lg text-center text-gray-600">Develop Locally, Deploy Globally</p>
-      <footer class="fixed bottom-8 w-full h-6 flex items-center justify-center gap-2 text-gray-800">
-        Powered by
-        <a
-          class="flex items-center gap-2 text-sm text-black no-underline font-semibold"
-          href="https://deno.com/deploy"
-        >
-          <img alt="Deno" src="https://dash.deno.com/assets/logo.svg" class="w-5" /> Deno Deploy
-        </a>
-      </footer>
+function handler(_req: Request): Response {
+  const page = (
+    <div>
+      <h1>Current time</h1>
+      <p>{new Date().toLocaleString()}</p>
     </div>
-  ),
-});
+  );
+  const html = renderToString(page);
+  return new Response(html, {
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
+}
 
-serve(handler);   
+serve(handler);
